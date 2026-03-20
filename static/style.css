@@ -1,0 +1,90 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f0f1a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+.hero { text-align: center; margin: 40px 0; }
+.hero h1 { font-size: 2.5rem; color: #7c6af7; }
+.hero p  { color: #aaa; margin-top: 10px; }
+
+.card {
+    background: #1a1a2e;
+    border: 1px solid #2d2d4e;
+    border-radius: 16px;
+    padding: 30px;
+    margin: 20px 0;
+}
+
+textarea {
+    width: 100%; background: #0f0f1a;
+    border: 1px solid #3d3d6e; border-radius: 10px;
+    color: #e0e0e0; padding: 15px;
+    font-size: 1rem; margin: 15px 0;
+    resize: vertical;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7c6af7, #5a4fcf);
+    color: white; border: none;
+    padding: 14px 30px; border-radius: 10px;
+    font-size: 1rem; cursor: pointer;
+    width: 100%; margin-top: 10px;
+    transition: transform 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); }
+
+/* Progress Bar */
+.progress-bar { background: #1a1a2e; border-radius: 10px; height: 8px; margin-bottom: 20px; }
+.progress-fill { background: #7c6af7; height: 100%; border-radius: 10px; transition: width 0.5s; }
+
+.badge {
+    background: #7c6af7; color: white;
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 0.8rem; display: inline-block; margin-bottom: 15px;
+}
+
+.interview-card h2 { font-size: 1.4rem; margin-bottom: 20px; color: #fff; }
+
+.btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.timer { font-size: 1.1rem; color: #7c6af7; font-weight: bold; }
+
+/* Score Card */
+.score-card {
+    background: linear-gradient(135deg, #1a1a2e, #2d1b69);
+    border-radius: 16px; padding: 30px;
+    text-align: center; margin: 20px 0;
+    border: 1px solid #7c6af7;
+}
+.big-score { font-size: 5rem; font-weight: bold; color: #7c6af7; }
+.big-score span { font-size: 2rem; color: #aaa; }
+
+.confidence { padding: 8px 20px; border-radius: 20px; display: inline-block; margin: 10px; }
+.high   { background: #1a4a1a; color: #4caf50; }
+.medium { background: #4a3a00; color: #ffc107; }
+.low    { background: #4a1a1a; color: #f44336; }
+
+/* Feedback Cards */
+.feedback-card { background: #1a1a2e; border-radius: 12px; padding: 20px; margin: 15px 0; }
+.feedback-card h3 { color: #ccc; margin-bottom: 10px; }
+
+.score-bar { background: #0f0f1a; border-radius: 10px; height: 24px; margin: 10px 0; }
+.score-fill {
+    background: linear-gradient(90deg, #7c6af7, #5a4fcf);
+    height: 100%; border-radius: 10px;
+    display: flex; align-items: center;
+    padding-left: 10px; color: white; font-size: 0.8rem;
+}
+
+.good    { color: #4caf50; margin: 8px 0; }
+.improve { color: #ffc107; margin: 8px 0; }
+
+/* Tips */
+.tips-card { background: #1a1a2e; border-radius: 16px; padding: 25px; margin: 20px 0; }
+.tip { background: #0f0f1a; padding: 12px; border-radius: 8px; margin: 8px 0; border-left: 3px solid #7c6af7; }

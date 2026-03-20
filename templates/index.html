@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutureQuadra — AI Career Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<a href="/chat" class="card purple">
+<style>
+:root {
+    --bg: #050508;
+    --surface: #0d0d14;
+    --border: rgba(0,255,200,0.12);
+    --accent: #00ffc8;
+    --accent2: #7b61ff;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --danger: #ff4d6d;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Grid background */
+body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+        linear-gradient(rgba(0,255,200,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,200,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none; z-index:0;
+}
+
+.glow {
+    position:fixed; top:-200px; left:50%;
+    transform:translateX(-50%);
+    width:600px; height:400px;
+    background: radial-gradient(ellipse, rgba(0,255,200,0.06) 0%, transparent 70%);
+    pointer-events:none; z-index:0;
+}
+
+.container {
+    position:relative; z-index:1;
+    max-width:1000px; margin:0 auto;
+    padding:60px 24px;
+    display:flex; flex-direction:column;
+    align-items:center; min-height:100vh;
+}
+
+/* Nav */
+nav {
+    width:100%; display:flex;
+    justify-content:space-between; align-items:center;
+    margin-bottom:80px;
+}
+.logo {
+    font-family:'Space Mono', monospace;
+    font-size:1.2rem; color:var(--accent);
+    letter-spacing:2px;
+}
+.logo span { color:var(--muted); }
+
+.nav-tag {
+    background:rgba(0,255,200,0.08);
+    border:1px solid var(--border);
+    padding:6px 14px; border-radius:20px;
+    font-size:0.75rem; color:var(--accent);
+    font-family:'Space Mono', monospace;
+    letter-spacing:1px;
+}
+
+/* Hero */
+.hero { text-align:center; margin-bottom:70px; }
+
+.badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(0,255,200,0.06);
+    border:1px solid var(--border);
+    padding:8px 18px; border-radius:30px;
+    font-size:0.78rem; color:var(--accent);
+    font-family:'Space Mono', monospace;
+    margin-bottom:30px;
+    animation: fadeDown 0.6s ease;
+}
+.badge::before {
+    content:'';
+    width:7px; height:7px; border-radius:50%;
+    background:var(--accent);
+    animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-15px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+h1 {
+    font-size:clamp(2.8rem, 7vw, 5rem);
+    font-weight:800; line-height:1.1;
+    margin-bottom:20px;
+    animation: fadeUp 0.7s ease 0.1s both;
+}
+h1 .highlight {
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+
+.hero-sub {
+    font-size:1.1rem; color:var(--muted);
+    max-width:500px; margin:0 auto 40px;
+    line-height:1.7;
+    animation: fadeUp 0.7s ease 0.2s both;
+}
+
+/* Cards */
+.cards {
+<a href="/chat" class="card purple">
+<a href="/pdf" class="card" style="border-color:rgba(255,180,50,0.2);">
+    <span class="card-icon">📄</span>
+    <div class="card-title">PDF Analyzer</div>
+    <div class="card-desc">Upload any PDF and get instant AI summary, key points, and important terms to remember.</div>
+    <span class="card-tag" style="color:#ffb432;background:rgba(255,180,50,0.08);border-color:rgba(255,180,50,0.2);">PDF ANALYZER</span>
+</a>
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:20px; width:100%; max-width:780px;
+    animation: fadeUp 0.7s ease 0.3s both;
+}
+
+@media(max-width:600px) { .cards { grid-template-columns:1fr; } }
+
+.card {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px; padding:32px;
+    cursor:pointer; text-decoration:none; color:inherit;
+    position:relative; overflow:hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    display:block;
+}
+.card::before {
+    content:''; position:absolute;
+    inset:0; border-radius:20px;
+    background:linear-gradient(135deg, rgba(0,255,200,0.04), transparent);
+    opacity:0; transition:opacity 0.3s;
+}
+.card:hover { transform:translateY(-6px); border-color:var(--accent); box-shadow:0 20px 60px rgba(0,255,200,0.08); }
+.card:hover::before { opacity:1; }
+
+.card-icon {
+    font-size:2.4rem; margin-bottom:16px; display:block;
+}
+.card-title {
+    font-size:1.3rem; font-weight:700;
+    margin-bottom:10px; color:#fff;
+}
+.card-desc {
+    font-size:0.88rem; color:var(--muted);
+    line-height:1.6; margin-bottom:20px;
+}
+.card-tag {
+    font-family:'Space Mono', monospace;
+    font-size:0.7rem; color:var(--accent);
+    background:rgba(0,255,200,0.08);
+    border:1px solid var(--border);
+    padding:4px 10px; border-radius:10px;
+    display:inline-block;
+}
+
+.card.purple:hover { border-color:var(--accent2); box-shadow:0 20px 60px rgba(123,97,255,0.08); }
+.card.purple .card-tag { color:var(--accent2); background:rgba(123,97,255,0.08); border-color:rgba(123,97,255,0.2); }
+
+/* Footer */
+.footer {
+    margin-top:auto; padding-top:60px;
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem; color:var(--muted);
+    text-align:center;
+    animation: fadeUp 0.7s ease 0.5s both;
+}
+
+/* Stats row */
+.stats {
+    display:flex; gap:40px; margin-bottom:60px;
+    animation: fadeUp 0.7s ease 0.4s both;
+}
+.stat { text-align:center; }
+.stat-num { font-size:1.8rem; font-weight:800; color:var(--accent); font-family:'Space Mono',monospace; }
+.stat-label { font-size:0.75rem; color:var(--muted); margin-top:4px; }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="container">
+    <nav>
+        <div class="logo">FutureQuadra<span>.ai</span></div>
+        <div class="nav-tag">⚡ POWERED BY GROQ</div>
+    </nav>
+
+    <div class="hero">
+        <div class="badge">AI Career Assistant — Live Demo</div>
+        <h1>Ace Every<br><span class="highlight">Interview</span></h1>
+        <p class="hero-sub">Practice with voice, get instant AI feedback, and chat with your personal career coach — all powered by Groq AI.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-num">&lt;2s</div><div class="stat-label">AI Response</div></div>
+        <div class="stat"><div class="stat-num">5</div><div class="stat-label">Questions/Session</div></div>
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Free</div></div>
+    </div>
+
+    <div class="cards">
+        <a href="/interview" class="card">
+            <span class="card-icon">🎤</span>
+            <div class="card-title">Voice Interview</div>
+            <div class="card-desc">Paste a job description. AI asks questions. You speak your answers. Get scored instantly.</div>
+            <span class="card-tag">INTERVIEW COACH</span>
+        </a>
+        <a href="/chat" class="card purple">
+            <span class="card-icon">🤖</span>
+            <div class="card-title">Chat with FutureQuadra</div>
+            <div class="card-desc">Ask anything — career advice, coding help, interview tips, or just have a conversation.</div>
+            <span class="card-tag">AI CHATBOT</span>
+        </a>
+    </div>
+
+    <div class="footer">
+        Built for Hackathon 2024 &nbsp;·&nbsp; Powered by Groq + Llama 3 &nbsp;·&nbsp; Made by Rakesh
+    </div>
+</div>
+</body>
+</html>

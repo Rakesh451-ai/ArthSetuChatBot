@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Interview — FutureQuadra</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg:#050508; --surface:#0d0d14;
+    --border:rgba(0,255,200,0.12);
+    --accent:#00ffc8; --accent2:#7b61ff;
+    --text:#e8e8f0; --muted:#6b6b80;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:'Syne',sans-serif;
+    background:var(--bg);color:var(--text);
+    min-height:100vh;padding:24px;
+}
+body::before{
+    content:'';position:fixed;inset:0;
+    background-image:
+        linear-gradient(rgba(0,255,200,0.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,255,200,0.03) 1px,transparent 1px);
+    background-size:40px 40px;pointer-events:none;z-index:0;
+}
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.back{font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--muted);text-decoration:none;}
+.back:hover{color:var(--accent);}
+.title{font-size:0.95rem;font-weight:700;color:var(--accent);}
+
+/* Progress */
+.prog-meta{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);margin-bottom:8px;}
+.prog-bar{background:#1a1a24;border-radius:4px;height:4px;margin-bottom:20px;}
+.prog-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));height:100%;border-radius:4px;transition:width 0.6s;}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;}
+
+/* Setup */
+label{font-size:0.85rem;color:var(--muted);display:block;margin-bottom:10px;}
+textarea{
+    width:100%;background:#080810;border:1px solid var(--border);
+    border-radius:12px;color:var(--text);padding:14px;
+    font-family:'Syne',sans-serif;font-size:0.9rem;
+    resize:vertical;min-height:130px;outline:none;
+    transition:border-color 0.2s;
+}
+textarea:focus{border-color:var(--accent);}
+
+/* Question */
+.q-num{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);letter-spacing:2px;margin-bottom:10px;}
+.q-text{font-size:1.15rem;font-weight:600;line-height:1.6;color:#fff;}
+
+/* Mic */
+.mic-area{text-align:center;padding:20px 0;}
+.mic-btn{
+    width:80px;height:80px;border-radius:50%;border:none;
+    cursor:pointer;font-size:1.8rem;
+    background:#1a1a2e;border:2px solid var(--border);
+    transition:all 0.3s;color:white;
+}
+.mic-btn.on{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    border-color:#ef4444;
+    box-shadow:0 0 0 0 rgba(239,68,68,0.6);
+    animation:ripple 1.5s infinite;
+}
+@keyframes ripple{
+    0%{box-shadow:0 0 0 0 rgba(239,68,68,0.6);}
+    70%{box-shadow:0 0 0 20px rgba(239,68,68,0);}
+    100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}
+}
+.mic-btn.speaking{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    border-color:#22c55e;
+    animation:none;
+}
+.mic-hint{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);margin-top:10px;}
+
+/* Answer box - editable! */
+.answer-box{
+    width:100%;background:#080810;border:1px solid var(--border);
+    border-radius:12px;color:var(--text);padding:14px;
+    font-family:'Syne',sans-serif;font-size:0.9rem;
+    min-height:90px;outline:none;resize:vertical;
+    transition:border-color 0.2s;margin-bottom:14px;
+}
+.answer-box:focus{border-color:var(--accent);}
+.answer-label{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);margin-bottom:6px;letter-spacing:1px;}
+
+/* Buttons */
+.btn{
+    width:100%;padding:13px;border:none;border-radius:12px;
+    font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;
+    cursor:pointer;transition:all 0.2s;margin-bottom:10px;
+}
+.btn-green{background:linear-gradient(135deg,var(--accent),#00b894);color:#000;}
+.btn-purple{background:linear-gradient(135deg,var(--accent2),#5a40ff);color:#fff;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(0,0,0,0.3);}
+.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* AI feedback */
+.ai-box{
+    background:rgba(0,255,200,0.04);border:1px solid rgba(0,255,200,0.15);
+    border-radius:14px;padding:16px;margin-bottom:14px;display:none;
+}
+.ai-label{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.ai-msg{color:#ccc;line-height:1.6;font-size:0.9rem;}
+
+/* Loading */
+.loading{text-align:center;padding:16px;font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--accent);display:none;}
+
+/* Score */
+#score-screen{display:none;}
+.score-big{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:30px;margin-bottom:18px;}
+.score-num{font-family:'Space Mono',monospace;font-size:5rem;font-weight:700;color:var(--accent);line-height:1;}
+.score-num span{font-size:1.8rem;color:var(--muted);}
+.score-rating{display:inline-block;margin:12px 0;padding:6px 20px;border-radius:20px;font-weight:700;font-size:0.9rem;}
+.score-summary{color:var(--muted);line-height:1.6;font-size:0.88rem;margin-top:8px;}
+.tips h3{color:var(--accent);margin-bottom:12px;}
+.tip{background:var(--surface);border-left:2px solid var(--accent);padding:11px 14px;border-radius:0 10px 10px 0;margin-bottom:8px;font-size:0.87rem;color:#ccc;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="topbar">
+        <a href="/" class="back">← Back</a>
+        <div class="title">🎤 INTERVIEW MODE</div>
+    </div>
+
+    <!-- SETUP -->
+    <div id="setup-card" class="card">
+        <label>📋 Paste Job Description</label>
+        <textarea id="job-desc" placeholder="e.g. We are looking for a Python Developer with Flask, REST APIs..."></textarea>
+        <button class="btn btn-green" style="margin-top:12px;" onclick="startInterview()">🚀 Start Interview</button>
+    </div>
+
+    <!-- INTERVIEW -->
+    <div id="interview-screen" style="display:none;">
+        <div class="prog-meta">
+            <span id="q-label">Q1 of 5</span>
+            <span id="pct-label">20%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prog" style="width:20%"></div></div>
+
+        <div class="card">
+            <div class="q-num" id="q-num">QUESTION 01</div>
+            <div class="q-text" id="q-text">Loading...</div>
+        </div>
+
+        <!-- MIC BUTTON -->
+        <div class="mic-area">
+            <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
+            <div class="mic-hint" id="mic-hint">TAP TO START RECORDING</div>
+        </div>
+
+        <!-- ANSWER BOX — editable textarea so user can also type -->
+        <div class="answer-label">YOUR ANSWER</div>
+        <textarea class="answer-box" id="answer-box"
+            placeholder="Your spoken words appear here... you can also type your answer manually"></textarea>
+
+        <button class="btn btn-purple" id="submit-btn"
+            onclick="submitAnswer()">✅ Submit Answer</button>
+
+        <div class="ai-box" id="ai-box">
+            <div class="ai-label">◈ FutureQuadra FEEDBACK</div>
+            <div class="ai-msg" id="ai-msg"></div>
+        </div>
+
+        <div class="loading" id="loading">⚡ AI thinking...</div>
+    </div>
+
+    <!-- SCORE -->
+    <div id="score-screen">
+        <div class="score-big">
+            <div class="score-num" id="score-num">—<span>/100</span></div>
+            <div class="score-rating" id="score-rating">—</div>
+            <p class="score-summary" id="score-summary"></p>
+        </div>
+        <div class="tips" style="margin-bottom:18px;">
+            <h3>💡 How to Improve</h3>
+            <div id="tips-list"></div>
+        </div>
+        <button class="btn btn-green" onclick="location.href='/'">🏠 Home</button>
+        <button class="btn btn-purple" onclick="location.reload()">🔄 Try Again</button>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  SIMPLE RELIABLE VOICE — rebuilds each use
+// ═══════════════════════════════════════════
+let mic = null;
+let recording = false;
+
+function buildMic() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { alert("Use Google Chrome for voice!"); return null; }
+
+    const r = new SR();
+    r.continuous      = false;   // simpler — one shot per tap
+    r.interimResults  = true;
+    r.lang            = "en-IN"; // Indian English
+
+    r.onstart = () => {
+        console.log("MIC ON");
+        recording = true;
+        document.getElementById("mic-btn").className = "mic-btn on";
+        document.getElementById("mic-hint").innerText = "🔴 RECORDING... TAP TO STOP";
+    };
+
+    r.onresult = (e) => {
+        let full = "";
+        for (let i = 0; i < e.results.length; i++) {
+            full += e.results[i][0].transcript;
+        }
+        // Append to answer box — don't replace existing text
+        const box = document.getElementById("answer-box");
+        const prev = box.dataset.saved || "";
+        box.value = (prev + " " + full).trim();
+        console.log("Heard:", full);
+    };
+
+    r.onend = () => {
+        console.log("MIC OFF");
+        recording = false;
+        // Save what's in box
+        const box = document.getElementById("answer-box");
+        box.dataset.saved = box.value;
+        document.getElementById("mic-btn").className = "mic-btn";
+        document.getElementById("mic-hint").innerText = "TAP TO CONTINUE RECORDING";
+    };
+
+    r.onerror = (e) => {
+        console.log("MIC ERR:", e.error);
+        recording = false;
+        document.getElementById("mic-btn").className = "mic-btn";
+        if (e.error === "not-allowed") {
+            alert("Microphone blocked! Allow mic in Chrome settings.");
+        }
+        document.getElementById("mic-hint").innerText = "TAP TO RETRY";
+    };
+
+    return r;
+}
+
+function toggleMic() {
+    if (recording) {
+        // STOP
+        try { mic.stop(); } catch(e){}
+        recording = false;
+        document.getElementById("mic-btn").className = "mic-btn";
+        document.getElementById("mic-hint").innerText = "TAP TO CONTINUE RECORDING";
+    } else {
+        // START fresh mic each time (most reliable)
+        const box = document.getElementById("answer-box");
+        box.dataset.saved = box.value; // save current text
+
+        mic = buildMic();
+        if (!mic) return;
+        try {
+            mic.start();
+        } catch(e) {
+            console.log("Start error:", e);
+            setTimeout(() => { try { mic.start(); } catch(e2){} }, 500);
+        }
+    }
+}
+
+// ═══════════════════════════════════════════
+//  TEXT TO SPEECH
+// ═══════════════════════════════════════════
+function speak(text, cb) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.9; u.pitch = 1.0; u.volume = 1;
+
+    function go() {
+        const voices = speechSynthesis.getVoices();
+        const v = voices.find(v => v.lang === "en-US" && v.name.includes("Google"))
+               || voices.find(v => v.lang.startsWith("en"))
+               || voices[0];
+        if (v) u.voice = v;
+        u.onend = () => { if (cb) cb(); };
+        speechSynthesis.speak(u);
+    }
+
+    if (speechSynthesis.getVoices().length > 0) go();
+    else speechSynthesis.onvoiceschanged = go;
+}
+
+// ═══════════════════════════════════════════
+//  SHOW QUESTION
+// ═══════════════════════════════════════════
+function showQ(q, n, t) {
+    document.getElementById("q-text").innerText = q;
+    document.getElementById("q-num").innerText  = "QUESTION " + String(n).padStart(2,"0");
+    document.getElementById("q-label").innerText = "Q" + n + " of " + t;
+    document.getElementById("pct-label").innerText = Math.round(n/t*100) + "%";
+    document.getElementById("prog").style.width = (n/t*100) + "%";
+    document.getElementById("ai-box").style.display = "none";
+    document.getElementById("loading").style.display = "none";
+
+    // Clear answer box
+    const box = document.getElementById("answer-box");
+    box.value = "";
+    box.dataset.saved = "";
+
+    document.getElementById("mic-btn").className = "mic-btn";
+    document.getElementById("mic-hint").innerText = "TAP TO START RECORDING";
+    recording = false;
+}
+
+// ═══════════════════════════════════════════
+//  START INTERVIEW
+// ═══════════════════════════════════════════
+async function startInterview() {
+    const jd = document.getElementById("job-desc").value.trim();
+    if (!jd) { alert("Paste a job description first!"); return; }
+
+    document.getElementById("setup-card").style.display   = "none";
+    document.getElementById("interview-screen").style.display = "block";
+    document.getElementById("loading").style.display      = "block";
+    document.getElementById("q-text").innerText           = "Generating questions...";
+
+    try {
+        const res  = await fetch("/start", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ job_description: jd })
+        });
+        const data = await res.json();
+        showQ(data.question, data.q_number, data.total);
+        speak("Welcome! Here is question one. " + data.question);
+    } catch(e) {
+        alert("Error starting interview. Check terminal.");
+        console.error(e);
+    }
+}
+
+// ═══════════════════════════════════════════
+//  SUBMIT ANSWER
+// ═══════════════════════════════════════════
+async function submitAnswer() {
+    // Stop mic if running
+    if (recording) { try { mic.stop(); } catch(e){} }
+
+    const ans = document.getElementById("answer-box").value.trim();
+    if (!ans) {
+        alert("No answer found!\n\n1. Tap the mic button\n2. Speak your answer\n3. Tap again to stop\n4. Then click Submit");
+        return;
+    }
+
+    document.getElementById("submit-btn").disabled = true;
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("ai-box").style.display  = "none";
+
+    try {
+        const res  = await fetch("/respond", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ answer: ans })
+        });
+        const data = await res.json();
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("submit-btn").disabled   = false;
+        document.getElementById("ai-box").style.display  = "block";
+        document.getElementById("ai-msg").innerText      = data.feedback;
+
+        if (data.done) {
+            speak(data.feedback + " Calculating your final score.", () => showScore(data.score_data));
+        } else {
+            speak(data.feedback + " Next question. " + data.next_question, () => {
+                showQ(data.next_question, data.q_number, data.total);
+            });
+        }
+    } catch(e) {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("submit-btn").disabled   = false;
+        alert("Submit failed. Check terminal for errors.");
+        console.error(e);
+    }
+}
+
+// ═══════════════════════════════════════════
+//  SHOW SCORE
+// ═══════════════════════════════════════════
+function showScore(s) {
+    document.getElementById("interview-screen").style.display = "none";
+    document.getElementById("score-screen").style.display     = "block";
+    document.getElementById("score-num").innerHTML = s.score + '<span>/100</span>';
+    document.getElementById("score-summary").innerText = s.summary;
+
+    const rb = document.getElementById("score-rating");
+    rb.innerText = "🏅 " + s.rating;
+    const c = {
+        "Excellent":         "background:#0d2b1a;color:#4ade80",
+        "Good":              "background:#0d1b3e;color:#60a5fa",
+        "Average":           "background:#2b1f00;color:#fbbf24",
+        "Needs Improvement": "background:#2b0a0a;color:#f87171"
+    };
+    rb.style.cssText = (c[s.rating] || c["Good"])
+        + ";padding:6px 20px;border-radius:20px;display:inline-block;font-weight:700;";
+
+    const tl = document.getElementById("tips-list");
+    tl.innerHTML = "";
+    (s.tips || []).forEach(t => {
+        tl.innerHTML += '<div class="tip">💡 ' + t + '</div>';
+    });
+
+    speak("Your score is " + s.score + " out of 100. " + s.rating + ". " + s.summary);
+}
+</script>
+</body>
+</html>

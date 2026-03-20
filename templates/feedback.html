@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Interview Feedback</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Your Interview Report</h1>
+        
+        <!-- Score Card -->
+        <div class="score-card">
+            <div class="big-score">{{ result.overall_score }}<span>/100</span></div>
+            <div class="confidence 
+                {% if result.confidence_rating == 'High' %}high
+                {% elif result.confidence_rating == 'Medium' %}medium
+                {% else %}low{% endif %}">
+                Confidence: {{ result.confidence_rating }}
+            </div>
+            <p>{{ result.overall_summary }}</p>
+        </div>
+        
+        <!-- Per Question Feedback -->
+        <h2>📝 Question-by-Question Breakdown</h2>
+        {% for fb in result.feedbacks %}
+        <div class="feedback-card">
+            <h3>Q: {{ fb.question }}</h3>
+            <div class="score-bar">
+                <div class="score-fill" style="width: {{ fb.score }}%">
+                    {{ fb.score }}%
+                </div>
+            </div>
+            <p class="good">✅ {{ fb.good }}</p>
+            <p class="improve">💡 {{ fb.improve }}</p>
+        </div>
+        {% endfor %}
+        
+        <!-- Top Tips -->
+        <div class="tips-card">
+            <h2>🔥 Top Tips to Improve</h2>
+            {% for tip in result.top_tips %}
+            <div class="tip">💎 {{ tip }}</div>
+            {% endfor %}
+        </div>
+        
+        <a href="/" class="btn-primary">🔄 Try Another Job</a>
+    </div>
+</body>
+</html>
