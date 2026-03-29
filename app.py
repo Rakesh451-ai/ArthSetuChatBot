@@ -184,7 +184,7 @@ Return ONLY the JSON. No markdown. No explanation.""",
         return jsonify({"error": str(e)}), 500
 
 
-# ── CHATBOT ────────────────────────────────────────
+# ── CHATBOT (General Assistant) ─────────────────────────
 @app.route("/chatbot", methods=["POST"])
 def chatbot():
     data = request.json
@@ -193,8 +193,13 @@ def chatbot():
     pdf_context = session.get("pdf_text", "")
     pdf_title = session.get("pdf_title", "")
 
-    system = """You are FutureQuadra — a friendly, witty AI assistant.
-You help students with coding, career advice, interview tips, and questions.
+    system = """You are ArthSetu Chat — a friendly, witty AI assistant.
+You help students and professionals with:
+- Study and learning support
+- Career advice and interview preparation
+- Document summarization and note-taking
+- General questions (keep answers helpful and concise)
+
 Keep responses clear, helpful and conversational. Use emojis occasionally.
 Always be encouraging and supportive."""
 
@@ -227,19 +232,23 @@ If the user asks anything about this document, answer from it directly.
     return jsonify({"reply": reply})
 
 
-# ── INTERVIEW ROUTES ───────────────────────────────
+# ── INTERVIEW ROUTES (Finance-focused but under ArthSetu Chat) ──
 @app.route("/start", methods=["POST"])
 def start():
     data = request.json
     job_description = data.get("job_description", "")
 
     raw = ask_ai(
-        """You are an expert technical interviewer.
-Generate exactly 5 interview questions based on the job description.
-Mix technical and behavioral questions.
+        """You are an expert finance interviewer for 'ArthSetu Chat'.
+Generate exactly 5 interview questions **strictly related to finance roles**.
+Questions should cover:
+- Financial analysis, modelling, or reporting
+- Risk management, investment strategies
+- Behavioral questions specific to finance teams
+- Technical finance concepts (e.g., DCF, ratio analysis, budgeting)
 Return ONLY a valid JSON array. No explanation. No markdown.
-Example: ["Question 1", "Question 2", "Question 3", "Question 4", "Question 5"]""",
-        f"Job Description:\n{job_description}"
+Example: ["Question 1", "Question 2", ...]""",
+        f"Job Description (if provided, use it to tailor questions):\n{job_description}"
     )
 
     try:
@@ -248,12 +257,13 @@ Example: ["Question 1", "Question 2", "Question 3", "Question 4", "Question 5"]"
         questions = json.loads(raw[s:e])
         questions = [str(q) for q in questions[:5]]
     except:
+        # Fallback finance questions if parsing fails
         questions = [
-            "Tell me about yourself.",
-            "What are your strongest technical skills?",
-            "Describe a challenging project.",
-            "How do you handle pressure?",
-            "Where do you see yourself in 5 years?"
+            "How do you evaluate a company's financial health?",
+            "Walk me through a DCF model.",
+            "What are the key financial ratios you monitor and why?",
+            "Describe a time you identified a financial risk and how you mitigated it.",
+            "How do you stay updated on market trends and economic indicators?"
         ]
 
     session["questions"] = questions
@@ -277,10 +287,12 @@ def respond():
     session["current_q"] = current_q + 1
 
     feedback = ask_ai(
-        """You are a warm encouraging interview coach.
-Give exactly 2 sentences of feedback. Start with: Great answer!, Good point!, or Nice response!
+        """You are a warm, encouraging finance interview coach for 'ArthSetu Chat'.
+Give exactly 2 sentences of feedback **specifically for a finance role**.
+Start with: Great answer!, Good point!, or Nice response!
+Focus on clarity of financial concepts, use of appropriate terminology, and alignment with finance best practices.
 No bullet points. Speak naturally.""",
-        f'Question: "{questions[current_q]}"\nAnswer: "{user_answer}"'
+        f'Finance Interview Question: "{questions[current_q]}"\nCandidate Answer: "{user_answer}"'
     )
 
     if feedback.startswith("ERROR:"):
@@ -301,10 +313,11 @@ No bullet points. Speak naturally.""",
     ])
 
     raw_score = ask_ai(
-        """You are a professional interview evaluator.
+        """You are a professional finance interview evaluator for 'ArthSetu Chat'.
 Return ONLY raw JSON, no markdown:
-{"score": 75, "rating": "Good", "summary": "2 sentence summary", "tips": ["tip 1", "tip 2", "tip 3"]}
-Rating: Excellent, Good, Average, or Needs Improvement""",
+{"score": 75, "rating": "Excellent/Good/Average/Needs Improvement", "summary": "2 sentence summary focusing on finance strengths", "tips": ["tip 1", "tip 2", "tip 3"]}
+Rating: Excellent, Good, Average, or Needs Improvement
+Base your evaluation on financial knowledge, communication clarity, and relevance to finance roles.""",
         qa_text
     )
 
@@ -313,10 +326,11 @@ Rating: Excellent, Good, Average, or Needs Improvement""",
         s = raw_score.find("{"); e = raw_score.rfind("}") + 1
         score_data = json.loads(raw_score[s:e])
     except:
+        # Default finance evaluation
         score_data = {
             "score": 72, "rating": "Good",
-            "summary": "You completed the interview well!",
-            "tips": ["Use STAR method", "Give specific examples", "Stay confident"]
+            "summary": "You demonstrated solid financial reasoning and communication.",
+            "tips": ["Use more specific financial examples", "Quantify your achievements", "Structure answers with STAR method"]
         }
 
     return jsonify({"feedback": feedback, "done": True, "score_data": score_data})

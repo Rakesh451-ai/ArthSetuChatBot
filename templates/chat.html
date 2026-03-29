@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat — FutureQuadra</title>
+<title>ArthSetu Chat — Finance AI Assistant</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -78,14 +78,14 @@ header{
     display:flex;align-items:center;justify-content:center;
     font-size:0.9rem;flex-shrink:0;align-self:flex-end;
 }
-.msg.FutureQuadra .av{background:linear-gradient(135deg,var(--accent),#5a40ff);}
+.msg.ArthSetu .av{background:linear-gradient(135deg,var(--accent),#5a40ff);}
 .msg.user .av{background:#1a1a2e;border:1px solid var(--border);}
 
 .bubble{
     max-width:72%;padding:11px 15px;
     border-radius:16px;line-height:1.65;font-size:0.88rem;
 }
-.msg.FutureQuadra .bubble{
+.msg.ArthSetu .bubble{
     background:var(--surface);border:1px solid var(--border);
     border-radius:4px 16px 16px 16px;color:var(--text);
 }
@@ -112,7 +112,7 @@ header{
     padding:12px 16px;flex-shrink:0;
 }
 
-/* Quick prompts */
+/* Quick prompts - Finance focused */
 .qps{
     display:flex;gap:7px;overflow-x:auto;margin-bottom:10px;
     padding-bottom:2px;scrollbar-width:none;
@@ -155,10 +155,10 @@ header{
 
 <header>
     <a href="/" class="back">←</a>
-    <div class="avatar">🤖</div>
+    <div class="avatar">📈</div>
     <div>
-        <div class="hname">FutureQuadra</div>
-        <div class="hstatus">Online</div>
+        <div class="hname">ArthSetu Chat</div>
+        <div class="hstatus">Finance Advisor • Online</div>
     </div>
 </header>
 
@@ -168,15 +168,15 @@ header{
 
 <div class="bottom">
     <div class="qps">
-        <div class="qp" onclick="send('Give me 5 interview tips')">💡 Interview tips</div>
-        <div class="qp" onclick="send('How to improve my resume?')">📄 Resume help</div>
-        <div class="qp" onclick="send('Explain Python decorators simply')">🐍 Python help</div>
-        <div class="qp" onclick="send('How to crack DSA interviews?')">🧠 DSA tips</div>
-        <div class="qp" onclick="send('What skills should a CS fresher learn?')">🎓 Fresher tips</div>
+        <div class="qp" onclick="send('Explain DCF valuation step by step')">📊 DCF Model</div>
+        <div class="qp" onclick="send('What are the key financial ratios for profitability analysis?')">📈 Key Ratios</div>
+        <div class="qp" onclick="send('How to prepare for an investment banking interview?')">🏦 IB Interview</div>
+        <div class="qp" onclick="send('Difference between NPV and IRR')">💰 NPV vs IRR</div>
+        <div class="qp" onclick="send('Tips for financial modeling test')">📐 Modeling Tips</div>
     </div>
     <div class="row">
         <textarea id="inp" rows="1"
-            placeholder="Ask anything..."
+            placeholder="Ask me anything about finance, investments, or career..."
             oninput="resize(this)"
             onkeydown="keydown(event)"></textarea>
         <button class="send" id="sendbtn" onclick="send()">➤</button>
@@ -212,7 +212,7 @@ function addMsg(role, html) {
 
     const av = document.createElement("div");
     av.className = "av";
-    av.innerText = role === "FutureQuadra" ? "🤖" : "👤";
+    av.innerText = role === "ArthSetu" ? "📈" : "👤";
 
     const bub = document.createElement("div");
     bub.className = "bubble";
@@ -228,10 +228,10 @@ function addMsg(role, html) {
 // ── Typing indicator ──
 function showTyping() {
     const div = document.createElement("div");
-    div.className = "msg FutureQuadra";
+    div.className = "msg ArthSetu";
     div.id = "typing";
     const av = document.createElement("div");
-    av.className = "av"; av.innerText = "🤖";
+    av.className = "av"; av.innerText = "📈";
     const bub = document.createElement("div");
     bub.className = "bubble";
     bub.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
@@ -283,13 +283,13 @@ async function send(preset) {
         hideTyping();
 
         const reply = data.reply || "Sorry, no response received.";
-        addMsg("FutureQuadra", format(reply));
+        addMsg("ArthSetu", format(reply));
         history.push({ role: "assistant", content: reply });
 
     } catch(e) {
         hideTyping();
         console.error("Chat error:", e);
-        addMsg("FutureQuadra", "⚠️ Error: " + e.message + "<br>Check your terminal for details.");
+        addMsg("ArthSetu", "⚠️ Error: " + e.message + "<br>Check your terminal for details.");
     }
 
     busy = false;
@@ -297,16 +297,17 @@ async function send(preset) {
     inpEl.focus();
 }
 
-// ── Welcome message on load ──
+// ── Welcome message on load (Finance focused) ──
 window.onload = () => {
-    addMsg("FutureQuadra",
-        "Hey! I'm <strong>FutureQuadra</strong> 👋<br><br>" +
-        "I'm your AI career assistant powered by Groq. I can help with:<br>" +
-        "• 🎤 Interview preparation<br>" +
-        "• 🐍 Python & coding questions<br>" +
-        "• 📄 Resume & career advice<br>" +
-        "• 🧠 DSA & problem solving<br><br>" +
-        "What would you like to talk about?"
+    addMsg("ArthSetu",
+        "Welcome to <strong>ArthSetu Chat</strong> 📈<br><br>" +
+        "I'm your AI finance assistant, here to help with:<br>" +
+        "• 💼 Financial analysis & valuation (DCF, ratios, modeling)<br>" +
+        "• 📊 Investment strategies & risk management<br>" +
+        "• 🏦 Finance career prep (IB, PE, corporate finance)<br>" +
+        "• 📝 Resume reviews & interview tips for finance roles<br>" +
+        "• 📚 Explaining concepts like NPV, IRR, CAPM, and more<br><br>" +
+        "What finance topic would you like to explore today?"
     );
     inpEl.focus();
 };

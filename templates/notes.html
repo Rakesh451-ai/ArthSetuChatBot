@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notes Summarizer — FutureQuadra</title>
+<title>Notes Summarizer — ArthSetu Chat</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -366,13 +366,13 @@ h1 em{
     display:flex;align-items:center;justify-content:center;
     font-size:0.75rem;flex-shrink:0;align-self:flex-end;
 }
-.cm.FutureQuadra .cav{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+.cm.ArthSetu .cav{background:linear-gradient(135deg,var(--accent),var(--accent2));}
 .cm.user .cav{background:var(--surface2);border:1px solid var(--border);}
 .cb{
     max-width:80%;padding:9px 12px;border-radius:13px;
     font-size:0.82rem;line-height:1.55;
 }
-.cm.FutureQuadra .cb{
+.cm.ArthSetu .cb{
     background:var(--surface2);border:1px solid var(--border);
     border-radius:4px 13px 13px 13px;
 }
@@ -436,7 +436,7 @@ footer{
 <body>
 
 <nav>
-    <div class="nav-logo">FutureQuadra</div>
+    <div class="nav-logo">ArthSetu</div>
     <div class="nav-links">
         <a href="/" class="nav-link">Home</a>
         <a href="/pdf" class="nav-link">PDF</a>
@@ -447,9 +447,9 @@ footer{
 </nav>
 
 <div class="hero">
-    <div class="badge">AI Notes Summarizer</div>
-    <h1>Turn Your Notes Into<br><em>Smart Summaries</em></h1>
-    <p>Paste your raw notes — get a clean summary, key points, important terms, and a quiz to test yourself.</p>
+    <div class="badge">📈 Finance Notes Summarizer</div>
+    <h1>Turn Your Finance Notes Into<br><em>Smart Insights</em></h1>
+    <p>Paste your finance, accounting, or investment notes — get AI summary, key points, important terms, and a quiz.</p>
 </div>
 
 <div class="main">
@@ -457,17 +457,17 @@ footer{
     <!-- INPUT -->
     <div class="input-section" id="input-section">
         <div class="input-header">
-            <div class="input-title">📝 Paste Your Notes</div>
+            <div class="input-title">📝 Paste Your Finance Notes</div>
             <div class="char-count" id="char-count">0 characters</div>
         </div>
 
         <textarea id="notes-input"
-            placeholder="Paste your notes here... class notes, textbook content, research notes, meeting notes, anything!"
+            placeholder="Paste your finance notes here... e.g., DCF analysis, financial ratios, CAPM, valuation methods, etc."
             oninput="updateCount()"></textarea>
 
         <div class="input-footer">
             <div class="quick-fill">
-                <div class="qf-btn" onclick="fillSample()">📖 Try Sample Notes</div>
+                <div class="qf-btn" onclick="fillSample()">📖 Try Finance Sample</div>
                 <div class="qf-btn" onclick="clearNotes()">🗑️ Clear</div>
             </div>
             <button class="analyze-btn" id="analyze-btn" onclick="analyzeNotes()">
@@ -480,17 +480,17 @@ footer{
     <div id="loading">
         <div class="loader-ring"></div>
         <div class="loader-text">Analyzing your notes...</div>
-        <div class="loader-sub">AI is extracting key insights</div>
+        <div class="loader-sub">ArthSetu AI is extracting key insights</div>
     </div>
 
     <!-- RESULTS -->
     <div id="results">
         <div class="result-topbar">
             <div>
-                <div class="result-title" id="res-title">Notes Summary</div>
+                <div class="result-title" id="res-title">Finance Notes Summary</div>
                 <div class="result-tags" style="margin-top:8px;">
                     <span class="rtag rtag-green" id="res-diff">Intermediate</span>
-                    <span class="rtag rtag-blue">✅ Analyzed</span>
+                    <span class="rtag rtag-blue">✅ Analyzed by ArthSetu</span>
                 </div>
             </div>
             <button class="reset-btn" onclick="resetPage()">+ New Notes</button>
@@ -511,7 +511,7 @@ footer{
             <div class="card">
                 <div class="card-head">
                     <span class="card-icon">⭐</span>
-                    <span class="card-title">Key Points to Remember</span>
+                    <span class="card-title">Key Finance Concepts</span>
                 </div>
                 <div id="res-points"></div>
             </div>
@@ -520,7 +520,7 @@ footer{
             <div class="card">
                 <div class="card-head">
                     <span class="card-icon">📚</span>
-                    <span class="card-title">Important Terms</span>
+                    <span class="card-title">Important Finance Terms</span>
                 </div>
                 <div id="res-terms"></div>
             </div>
@@ -538,7 +538,7 @@ footer{
             <div class="card">
                 <div class="card-head">
                     <span class="card-icon">💡</span>
-                    <span class="card-title">Study Tips</span>
+                    <span class="card-title">Finance Study Tips</span>
                 </div>
                 <div id="res-tips"></div>
             </div>
@@ -547,7 +547,7 @@ footer{
     </div>
 </div>
 
-<footer>Built for Hackathon 2026 · FutureQuadra · Powered by Groq + LLaMA 3.1</footer>
+<footer>ArthSetu Chat · Finance AI Assistant</footer>
 
 <!-- FLOATING CHATBOT -->
 <button id="chat-fab" onclick="toggleChat()">
@@ -557,10 +557,10 @@ footer{
 
 <div id="chat-win">
     <div class="chat-head">
-        <div class="chat-av">🤖</div>
+        <div class="chat-av">📈</div>
         <div>
-            <div class="chat-name">FutureQuadra AI</div>
-            <div class="chat-status">Ready to help</div>
+            <div class="chat-name">ArthSetu AI</div>
+            <div class="chat-status">Finance advisor online</div>
         </div>
         <button class="close-x" onclick="toggleChat()">✕</button>
     </div>
@@ -568,15 +568,15 @@ footer{
     <div id="cmsgs"></div>
 
     <div class="cqps">
-        <div class="cqp" onclick="cSend('Explain these notes simply')">💡 Simplify</div>
-        <div class="cqp" onclick="cSend('Give me more quiz questions')">🧠 More quiz</div>
-        <div class="cqp" onclick="cSend('How should I study this topic?')">📖 Study plan</div>
-        <div class="cqp" onclick="cSend('What are the most important things to remember?')">⭐ Key things</div>
+        <div class="cqp" onclick="cSend('Explain these finance notes simply')">💡 Simplify</div>
+        <div class="cqp" onclick="cSend('Give me more quiz questions about valuation')">🧠 More quiz</div>
+        <div class="cqp" onclick="cSend('How should I study this finance topic?')">📖 Study plan</div>
+        <div class="cqp" onclick="cSend('What are the most important concepts to remember?')">⭐ Key things</div>
     </div>
 
     <div class="cinp-row">
         <textarea id="cinp" rows="1"
-            placeholder="Ask about your notes..."
+            placeholder="Ask about your finance notes..."
             oninput="cResize(this)"
             onkeydown="cKey(event)"></textarea>
         <button class="csend" id="csend" onclick="cSend()">➤</button>
@@ -585,7 +585,7 @@ footer{
 
 <script>
 // ══════════════════════════════
-//  NOTES ANALYZER
+//  NOTES ANALYZER (Finance focus)
 // ══════════════════════════════
 function updateCount() {
     const len = document.getElementById("notes-input").value.length;
@@ -598,37 +598,41 @@ function clearNotes() {
 }
 
 function fillSample() {
-    document.getElementById("notes-input").value = `Machine Learning - Class Notes
+    document.getElementById("notes-input").value = `Discounted Cash Flow (DCF) Analysis - Finance Notes
 
-What is Machine Learning?
-ML is a subset of AI that allows systems to learn from data without being explicitly programmed.
+What is DCF?
+DCF is a valuation method used to estimate the value of an investment based on its expected future cash flows. The method discounts those cash flows to present value using a discount rate (usually WACC).
 
-Types of ML:
-1. Supervised Learning - uses labeled data (eg. spam detection)
-2. Unsupervised Learning - finds patterns in unlabeled data (eg. clustering)
-3. Reinforcement Learning - learns by rewards and penalties (eg. game playing)
+Key Steps in DCF:
+1. Forecast Free Cash Flows (FCF) for 5-10 years
+2. Calculate Terminal Value (perpetuity growth or exit multiple)
+3. Discount both to present value using WACC
+4. Sum to get Enterprise Value
+5. Adjust for net debt to get Equity Value
 
-Key Algorithms:
-- Linear Regression: predicts continuous values
-- Logistic Regression: predicts binary outcomes
-- Decision Trees: tree-like model of decisions
-- Neural Networks: inspired by human brain
+Important Formulas:
+- Free Cash Flow = EBIT*(1-Tax) + Depreciation - CapEx - Change in NWC
+- Discount Factor = 1 / (1+WACC)^n
+- Terminal Value (Gordon Growth) = FCF_n * (1+g) / (WACC - g)
 
-Overfitting vs Underfitting:
-- Overfitting: model learns training data too well, fails on new data
-- Underfitting: model too simple, fails to capture patterns
+WACC = (E/V * Re) + (D/V * Rd * (1-Tax))
 
-Important terms:
-- Training data, Test data, Validation data
-- Epoch: one pass through entire training dataset
-- Gradient Descent: optimization algorithm to minimize loss
-- Backpropagation: algorithm for training neural networks`;
+Key Terms:
+- WACC: Weighted Average Cost of Capital
+- Terminal Value: value of business beyond forecast period
+- Perpetuity Growth Rate: long-term growth assumption (usually < GDP growth)
+- NPV: Net Present Value (should be positive for good investment)
+
+When to use DCF:
+- For companies with stable, predictable cash flows
+- Not ideal for early-stage startups with negative cash flows
+- Sensitivity analysis is crucial (change assumptions)`;
     updateCount();
 }
 
 async function analyzeNotes() {
     const notes = document.getElementById("notes-input").value.trim();
-    if (!notes) { alert("Please paste your notes first!"); return; }
+    if (!notes) { alert("Please paste your finance notes first!"); return; }
     if (notes.length < 50) { alert("Notes are too short. Add more content!"); return; }
 
     document.getElementById("input-section").style.display = "none";
@@ -660,7 +664,7 @@ function showResults(data) {
     document.getElementById("loading").style.display = "none";
     document.getElementById("results").style.display = "block";
 
-    document.getElementById("res-title").innerText = data.title || "Notes Summary";
+    document.getElementById("res-title").innerText = data.title || "Finance Notes Summary";
     document.getElementById("res-diff").innerText = data.difficulty || "Intermediate";
     document.getElementById("res-summary").innerText = data.summary || "";
 
@@ -709,10 +713,10 @@ function showResults(data) {
     });
 
     // Open chatbot with context message
-    cAddMsg("FutureQuadra",
-        `Notes analyzed! 🎉<br>
+    cAddMsg("ArthSetu",
+        `Finance notes analyzed! 🎉<br>
         I know your <strong>${data.title}</strong> notes now.<br>
-        Ask me to explain anything or quiz you further!`
+        Ask me to explain any term or quiz you further!`
     );
     if (!chatOpen) toggleChat();
 }
@@ -730,7 +734,7 @@ function resetPage() {
 }
 
 // ══════════════════════════════
-//  FLOATING CHATBOT
+//  FLOATING CHATBOT (ArthSetu)
 // ══════════════════════════════
 let chatOpen = false;
 let chatBusy = false;
@@ -741,10 +745,10 @@ function toggleChat() {
     document.getElementById("chat-win").style.display = chatOpen ? "flex" : "none";
     document.getElementById("fab-icon").innerText = chatOpen ? "✕" : "💬";
     if (chatOpen && document.getElementById("cmsgs").children.length === 0) {
-        cAddMsg("FutureQuadra",
-            "Hi! I'm <strong>FutureQuadra AI</strong> 👋<br>" +
-            "Paste your notes and I'll help you understand them!<br>" +
-            "I can also quiz you, explain concepts, or give study tips."
+        cAddMsg("ArthSetu",
+            "Hi! I'm <strong>ArthSetu AI</strong> 📈<br>" +
+            "Paste your finance notes and I'll help you master them!<br>" +
+            "I can quiz you, explain concepts like DCF, CAPM, or give study tips."
         );
     }
     if (chatOpen) document.getElementById("cinp").focus();
@@ -764,7 +768,7 @@ function cAddMsg(role, html) {
     d.className = "cm " + role;
     const av = document.createElement("div");
     av.className = "cav";
-    av.innerText = role === "FutureQuadra" ? "🤖" : "👤";
+    av.innerText = role === "ArthSetu" ? "📈" : "👤";
     const b = document.createElement("div");
     b.className = "cb";
     b.innerHTML = html;
@@ -776,9 +780,9 @@ function cAddMsg(role, html) {
 function cShowTyping() {
     const area = document.getElementById("cmsgs");
     const d = document.createElement("div");
-    d.className = "cm FutureQuadra"; d.id = "typing";
+    d.className = "cm ArthSetu"; d.id = "typing";
     const av = document.createElement("div");
-    av.className = "cav"; av.innerText = "🤖";
+    av.className = "cav"; av.innerText = "📈";
     const b = document.createElement("div");
     b.className = "cb";
     b.innerHTML = '<div class="tdots"><span></span><span></span><span></span></div>';
@@ -817,11 +821,11 @@ async function cSend(preset) {
         });
         const data = await res.json();
         cHideTyping();
-        cAddMsg("FutureQuadra", cFormat(data.reply || "Sorry, try again!"));
+        cAddMsg("ArthSetu", cFormat(data.reply || "Sorry, try again!"));
         chatHistory.push({ role: "assistant", content: data.reply });
     } catch(e) {
         cHideTyping();
-        cAddMsg("FutureQuadra", "⚠️ Error. Check terminal.");
+        cAddMsg("ArthSetu", "⚠️ Error. Check terminal.");
     }
 
     chatBusy = false;

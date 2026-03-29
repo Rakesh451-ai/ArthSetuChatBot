@@ -1,3 +1,4 @@
+/* ArthSetu Chat — Finance AI Assistant */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -55,7 +56,7 @@ textarea {
 .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
 .timer { font-size: 1.1rem; color: #7c6af7; font-weight: bold; }
 
-/* Score Card */
+/* Score Card (Finance Interview Report) */
 .score-card {
     background: linear-gradient(135deg, #1a1a2e, #2d1b69);
     border-radius: 16px; padding: 30px;
@@ -70,7 +71,7 @@ textarea {
 .medium { background: #4a3a00; color: #ffc107; }
 .low    { background: #4a1a1a; color: #f44336; }
 
-/* Feedback Cards */
+/* Feedback Cards (per question) */
 .feedback-card { background: #1a1a2e; border-radius: 12px; padding: 20px; margin: 15px 0; }
 .feedback-card h3 { color: #ccc; margin-bottom: 10px; }
 
@@ -85,6 +86,6 @@ textarea {
 .good    { color: #4caf50; margin: 8px 0; }
 .improve { color: #ffc107; margin: 8px 0; }
 
-/* Tips */
+/* Top Tips (Finance Focus) */
 .tips-card { background: #1a1a2e; border-radius: 16px; padding: 25px; margin: 20px 0; }
 .tip { background: #0f0f1a; padding: 12px; border-radius: 8px; margin: 8px 0; border-left: 3px solid #7c6af7; }

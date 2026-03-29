@@ -2,12 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Your Interview Feedback</title>
+    <title>ArthSetu Chat – Interview Feedback</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Optional inline tweaks to match ArthSetu branding */
+        .container h1::before {
+            content: "📈 ";
+        }
+        .container h1 {
+            font-family: 'Syne', sans-serif;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #7b61ff, #5a40ff);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 Your Interview Report</h1>
+        <h1>ArthSetu Chat – Finance Interview Report</h1>
         
         <!-- Score Card -->
         <div class="score-card">
@@ -38,13 +50,13 @@
         
         <!-- Top Tips -->
         <div class="tips-card">
-            <h2>🔥 Top Tips to Improve</h2>
+            <h2>🔥 Top Tips to Improve (Finance Focus)</h2>
             {% for tip in result.top_tips %}
             <div class="tip">💎 {{ tip }}</div>
             {% endfor %}
         </div>
         
-        <a href="/" class="btn-primary">🔄 Try Another Job</a>
+        <a href="/" class="btn-primary">🔄 Try Another Finance Interview</a>
     </div>
 </body>
 </html>
