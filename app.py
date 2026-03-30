@@ -51,6 +51,12 @@ def notes_page():
 def summarize_notes():
     data = request.json
     notes_text = data.get("notes", "")
+@app.route("/ping")
+def ping():
+    return jsonify({
+        "message": "pong",
+        "status": "ok"
+    })
 
     if not notes_text.strip():
         return jsonify({"error": "No notes provided"}), 400
