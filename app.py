@@ -43,20 +43,22 @@ def chat():
 @app.route("/pdf")
 def pdf_page():
     return render_template("pdf.html")
+
 @app.route("/notes")
 def notes_page():
     return render_template("notes.html")
 
-@app.route("/summarize-notes", methods=["POST"])
-def summarize_notes():
-    data = request.json
-    notes_text = data.get("notes", "")
 @app.route("/ping")
 def ping():
     return jsonify({
         "message": "pong",
         "status": "ok"
     })
+
+@app.route("/summarize-notes", methods=["POST"])
+def summarize_notes():
+    data = request.json
+    notes_text = data.get("notes", "")
 
     if not notes_text.strip():
         return jsonify({"error": "No notes provided"}), 400
@@ -190,7 +192,7 @@ Return ONLY the JSON. No markdown. No explanation.""",
         return jsonify({"error": str(e)}), 500
 
 
-# ── CHATBOT (General Assistant) ─────────────────────────
+# ── CHATBOT (Finance-only) ─────────────────────────
 @app.route("/chatbot", methods=["POST"])
 def chatbot():
     data = request.json
@@ -199,15 +201,22 @@ def chatbot():
     pdf_context = session.get("pdf_text", "")
     pdf_title = session.get("pdf_title", "")
 
-    system = """You are ArthSetu Chat — a friendly, witty AI assistant.
-You help students and professionals with:
-- Study and learning support
-- Career advice and interview preparation
-- Document summarization and note-taking
-- General questions (keep answers helpful and concise)
+    system = """You are ArthSetu Chat — a specialized finance AI assistant.
+Your expertise is strictly in finance, including:
+- Financial analysis, valuation (DCF, LBO, etc.)
+- Investment strategies and portfolio management
+- Corporate finance, M&A, and capital markets
+- Financial modeling, Excel skills
+- Finance career advice (investment banking, private equity, asset management)
+- Personal finance, budgeting, and wealth management
+- Accounting principles and financial statements
 
-Keep responses clear, helpful and conversational. Use emojis occasionally.
-Always be encouraging and supportive."""
+If the user asks anything not related to finance (e.g., cooking, sports, general tech), politely decline and redirect to finance topics.
+Example: "I'm here to help with finance. Would you like to learn about DCF or ratio analysis?"
+
+Keep responses clear, helpful, and conversational. Use emojis occasionally. Always be encouraging and supportive.
+Provide detailed, accurate, and actionable finance advice. When appropriate, include formulas, examples, or step-by-step explanations.
+Be concise but thorough."""
 
     if pdf_context:
         system += f"""
@@ -215,8 +224,7 @@ Always be encouraging and supportive."""
 You also have access to a document the user uploaded titled: "{pdf_title}".
 Document content: {pdf_context[:3000]}
 
-If the user asks anything about this document, answer from it directly.
-"""
+If the user asks anything about this document, answer from it directly. If the document is not finance-related, politely inform the user and still try to help with general finance concepts if relevant."""
 
     messages = [{"role": "system", "content": system}]
     for msg in history[-10:]:
@@ -238,7 +246,7 @@ If the user asks anything about this document, answer from it directly.
     return jsonify({"reply": reply})
 
 
-# ── INTERVIEW ROUTES (Finance-focused but under ArthSetu Chat) ──
+# ── INTERVIEW ROUTES (Finance-focused) ──
 @app.route("/start", methods=["POST"])
 def start():
     data = request.json
