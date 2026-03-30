@@ -5,9 +5,14 @@ import os, json, fitz  # fitz = PyMuPDF
 
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = "hackathon_winner_2024"
+app.secret_key = "hackathon_winner_2024"   # Change for production
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY") or "PASTE_YOUR_GROQ_KEY_HERE"
+# Get API key from environment
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+if not GROQ_API_KEY:
+    print("⚠️  WARNING: GROQ_API_KEY not found in environment. Using placeholder. Set it in .env or Render.")
+    GROQ_API_KEY = "PASTE_YOUR_GROQ_KEY_HERE"
+
 client = Groq(api_key=GROQ_API_KEY)
 
 def ask_ai(system_prompt, user_message, max_tokens=1000):
@@ -50,11 +55,10 @@ def notes_page():
 
 @app.route("/ping")
 def ping():
-    return jsonify({
-        "message": "pong",
-        "status": "ok"
-    })
+    return jsonify({"message": "pong", "status": "ok"})
 
+
+# ── NOTES SUMMARIZER ───────────────────────────────
 @app.route("/summarize-notes", methods=["POST"])
 def summarize_notes():
     data = request.json
@@ -69,23 +73,9 @@ Analyze the student's notes and return ONLY a valid JSON object like this:
 {
   "title": "Topic title in 5 words",
   "summary": "Clear 3-4 sentence summary of the notes",
-  "key_points": [
-    "Key point 1",
-    "Key point 2",
-    "Key point 3",
-    "Key point 4",
-    "Key point 5"
-  ],
-  "important_terms": [
-    {"term": "Term 1", "meaning": "Short definition"},
-    {"term": "Term 2", "meaning": "Short definition"},
-    {"term": "Term 3", "meaning": "Short definition"}
-  ],
-  "quiz": [
-    {"question": "Question 1?", "answer": "Answer 1"},
-    {"question": "Question 2?", "answer": "Answer 2"},
-    {"question": "Question 3?", "answer": "Answer 3"}
-  ],
+  "key_points": ["Key point 1", "Key point 2", "Key point 3", "Key point 4", "Key point 5"],
+  "important_terms": [{"term": "Term 1", "meaning": "Short definition"}, ...],
+  "quiz": [{"question": "Question 1?", "answer": "Answer 1"}, ...],
   "study_tips": ["Tip 1", "Tip 2", "Tip 3"],
   "difficulty": "Beginner or Intermediate or Advanced"
 }
@@ -125,74 +115,48 @@ def summarize():
         return jsonify({"error": "Please upload a PDF file"}), 400
 
     try:
-        # Extract text from PDF using PyMuPDF
         pdf_bytes = pdf_file.read()
         doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-
         full_text = ""
         for page in doc:
             full_text += page.get_text()
-
         doc.close()
 
-        # Limit text to avoid token overflow
         text_chunk = full_text[:6000]
-
         if not text_chunk.strip():
             return jsonify({"error": "PDF appears to be empty or image-based"}), 400
 
-        # Ask AI to summarize
         summary_raw = ask_ai(
             """You are an expert document analyst.
 Analyze the document and return ONLY a valid JSON object like this:
 {
   "title": "Document title or topic in 5 words",
-  "summary": "A clear 4-5 sentence summary of the entire document",
-  "key_points": [
-    "Key point 1 — important fact or concept",
-    "Key point 2 — important fact or concept",
-    "Key point 3 — important fact or concept",
-    "Key point 4 — important fact or concept",
-    "Key point 5 — important fact or concept",
-    "Key point 6 — important fact or concept"
-  ],
-  "important_terms": [
-    {"term": "Term 1", "meaning": "Short definition"},
-    {"term": "Term 2", "meaning": "Short definition"},
-    {"term": "Term 3", "meaning": "Short definition"},
-    {"term": "Term 4", "meaning": "Short definition"}
-  ],
+  "summary": "A clear 4-5 sentence summary",
+  "key_points": ["Key point 1", "Key point 2", ...],
+  "important_terms": [{"term": "Term 1", "meaning": "Short definition"}, ...],
   "difficulty": "Beginner or Intermediate or Advanced",
   "read_time": "estimated read time like 5 mins"
 }
-Return ONLY the JSON. No markdown. No explanation.""",
+Return ONLY JSON. No markdown. No explanation.""",
             f"Document content:\n{text_chunk}",
             max_tokens=1500
         )
 
-        print("Summary raw:", summary_raw[:200])
-
-        # Parse JSON
         summary_raw = summary_raw.replace("```json","").replace("```","").strip()
         s = summary_raw.find("{")
         e = summary_raw.rfind("}") + 1
         result = json.loads(summary_raw[s:e])
 
-        # Save PDF text for chatbot context
         session["pdf_text"] = text_chunk
         session["pdf_title"] = result.get("title", "Document")
-
         return jsonify(result)
 
-    except json.JSONDecodeError as e:
-        print("JSON parse error:", e)
-        return jsonify({"error": "AI response parsing failed. Try again."}), 500
     except Exception as e:
         print("PDF error:", str(e))
         return jsonify({"error": str(e)}), 500
 
 
-# ── CHATBOT (Finance-only) ─────────────────────────
+# ── CHATBOT (Finance‑only) ─────────────────────────
 @app.route("/chatbot", methods=["POST"])
 def chatbot():
     data = request.json
@@ -246,7 +210,7 @@ If the user asks anything about this document, answer from it directly. If the d
     return jsonify({"reply": reply})
 
 
-# ── INTERVIEW ROUTES (Finance-focused) ──
+# ── INTERVIEW ROUTES (Finance‑focused) ─────────────
 @app.route("/start", methods=["POST"])
 def start():
     data = request.json
@@ -265,20 +229,36 @@ Example: ["Question 1", "Question 2", ...]""",
         f"Job Description (if provided, use it to tailor questions):\n{job_description}"
     )
 
+    print("RAW AI RESPONSE:", raw)  # Debug: see what AI returns
+
+    # Default fallback questions (guaranteed non-empty)
+    default_questions = [
+        "How do you evaluate a company's financial health?",
+        "Walk me through a DCF model.",
+        "What are the key financial ratios you monitor and why?",
+        "Describe a time you identified a financial risk and how you mitigated it.",
+        "How do you stay updated on market trends and economic indicators?"
+    ]
+
+    questions = default_questions  # start with defaults
+
+    # Try to parse AI response
     try:
-        raw = raw.replace("```json","").replace("```","").strip()
-        s = raw.find("["); e = raw.rfind("]") + 1
-        questions = json.loads(raw[s:e])
-        questions = [str(q) for q in questions[:5]]
-    except:
-        # Fallback finance questions if parsing fails
-        questions = [
-            "How do you evaluate a company's financial health?",
-            "Walk me through a DCF model.",
-            "What are the key financial ratios you monitor and why?",
-            "Describe a time you identified a financial risk and how you mitigated it.",
-            "How do you stay updated on market trends and economic indicators?"
-        ]
+        cleaned = raw.replace("```json", "").replace("```", "").strip()
+        s = cleaned.find("[")
+        e = cleaned.rfind("]") + 1
+        if s != -1 and e > 0:
+            parsed = json.loads(cleaned[s:e])
+            if isinstance(parsed, list) and len(parsed) > 0:
+                questions = [str(q) for q in parsed[:5]]
+                print("Successfully parsed AI questions:", questions)
+    except Exception as ex:
+        print("Error parsing questions, using defaults:", ex)
+
+    # Final safety: if for any reason questions is empty, use defaults again
+    if not questions:
+        print("Questions empty, using defaults again")
+        questions = default_questions
 
     session["questions"] = questions
     session["current_q"] = 0
@@ -296,6 +276,9 @@ def respond():
     current_q = session.get("current_q", 0)
     answers = session.get("answers", [])
 
+    if current_q >= len(questions):
+        return jsonify({"error": "No more questions"}), 400
+
     answers.append({"question": questions[current_q], "answer": user_answer})
     session["answers"] = answers
     session["current_q"] = current_q + 1
@@ -312,6 +295,7 @@ No bullet points. Speak naturally.""",
     if feedback.startswith("ERROR:"):
         feedback = "Good effort! Keep going."
 
+    # If there are more questions, return next one
     if current_q + 1 < len(questions):
         return jsonify({
             "feedback": feedback,
@@ -321,6 +305,7 @@ No bullet points. Speak naturally.""",
             "done": False
         })
 
+    # Otherwise, calculate final score
     qa_text = "\n\n".join([
         f"Q{i+1}: {a['question']}\nAnswer: {a['answer']}"
         for i, a in enumerate(answers)
@@ -337,10 +322,10 @@ Base your evaluation on financial knowledge, communication clarity, and relevanc
 
     try:
         raw_score = raw_score.replace("```json","").replace("```","").strip()
-        s = raw_score.find("{"); e = raw_score.rfind("}") + 1
+        s = raw_score.find("{")
+        e = raw_score.rfind("}") + 1
         score_data = json.loads(raw_score[s:e])
     except:
-        # Default finance evaluation
         score_data = {
             "score": 72, "rating": "Good",
             "summary": "You demonstrated solid financial reasoning and communication.",
